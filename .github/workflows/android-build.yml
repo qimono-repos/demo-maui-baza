@@ -1,34 +1,39 @@
-
 name: Build and Sign Android APK
 
 on:
   push:
-    branches: [ trunk ] 
+    branches: [ trunk ]
 
 jobs:
   build-android:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-    - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
-      with:
-        dotnet-version: '9.0.200' 
-    
-    - name: Install MAUI workload  
-      run: dotnet workload install maui
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.200'
 
-    - name: Restore NuGet packages
-      run: dotnet restore Demo.csproj 
+      - name: Install MAUI workload
+        run: dotnet workload install maui
 
-    - name: Build Android Release
-      run: dotnet publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=${{ secrets.ANDROID_KEYSTORE_BASE64 }} /p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEYSTORE_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+      - name: Restore NuGet packages
+        run: dotnet restore Demo.csproj
 
-    - name: Upload Signed APK
-      uses: actions/upload-artifact@v4
-      with:
-        name: Signed-Android-APK
-        path: Demo/bin/Release/net9.0-android/publish/*.apk 
+      - name: Decode and store keystore file
+        run: |
+          echo "${{ secrets.ANDROID_KEYSTORE_BASE64 }}" | base64 --decode > qi-release-key.keystore
+        working-directory: ${{ github.workspace }}
+
+      - name: Build Android Release
+        run: dotnet publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=$GITHUB_WORKSPACE/qi-release-key.keystore /p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEY_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.ANDROID_STORE_PASSWORD }} /p:EnableTrimmer=false
+
+      - name: Upload Signed APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: Signed-Android-APK
+          path: Demo/bin/Release/net9.0-android/publish/*.apk
+
