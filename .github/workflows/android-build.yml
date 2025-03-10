@@ -23,26 +23,28 @@ jobs:
             zlib1g \
             libssl-dev
 
-      - name: Download .NET SDK (Direct) and Extract
+      - name: Remove Existing .NET SDK 
+        run: |
+          sudo rm -rf /usr/lib/dotnet/sdk/*  
+          sudo rm -rf /usr/lib/dotnet/shared/*
+
+      - name: Download .NET SDK (Direct) and Extract to System
         env:
           DOTNET_VERSION: 9.0.200
-          DOTNET_INSTALL_DIR: $HOME/dotnet  # Use $HOME/dotnet as in the documentation
+          DOTNET_INSTALL_DIR: /usr/lib/dotnet 
           DOTNET_DOWNLOAD_URL: https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.200/dotnet-sdk-9.0.200-linux-x64.tar.gz
         run: |
-          echo "check if DOTNET is already installed"
-          dotnet --version
           echo "Downloading .NET SDK $DOTNET_VERSION from $DOTNET_DOWNLOAD_URL"
-          mkdir -p $DOTNET_INSTALL_DIR
+          sudo mkdir -p $DOTNET_INSTALL_DIR
           curl -sSL $DOTNET_DOWNLOAD_URL -o dotnet-sdk.tar.gz
-          tar zxf dotnet-sdk.tar.gz -C $DOTNET_INSTALL_DIR
+          sudo tar zxf dotnet-sdk.tar.gz -C $DOTNET_INSTALL_DIR
 
           echo "Setting Environment Variables"
           echo "DOTNET_ROOT=$DOTNET_INSTALL_DIR" >> $GITHUB_ENV
-          echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV
-          echo $PATH 
+          echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV  # Prepend to PATH
 
           echo "Verifying .NET SDK installation"
-          dotnet --list-sdks
+          dotnet --info
 
       - name: Install MAUI workload
         run: dotnet workload install maui
