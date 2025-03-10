@@ -12,13 +12,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup .NET SDK
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: '9.0.200'
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends \
+            ca-certificates \
+            curl \
+            jq \
+            libicu-dev \
+            zlib1g \
+            libssl-dev
+
+      - name: Install .NET SDK from Script
+        env:
+          DOTNET_VERSION: 9.0.200
+          DOTNET_INSTALL_DIR: /usr/local/share/dotnet
+        run: |
+          echo "Downloading .NET SDK $DOTNET_VERSION"
+          curl -sSL https://dot.net/v1/dotnet-install.sh | bash /dev/stdin --channel $DOTNET_VERSION --install-dir $DOTNET_INSTALL_DIR
+
+          echo "Adding .NET SDK to PATH"
+          echo "$DOTNET_INSTALL_DIR" >> $GITHUB_PATH
+
+          echo "Verifying .NET SDK installation"
+          dotnet --info
 
       - name: Install MAUI workload
         run: dotnet workload install maui
+
+      - name: Verify MAUI workload Installation
+        run: dotnet workload list
 
       - name: Restore NuGet packages
         run: dotnet restore Demo.csproj
