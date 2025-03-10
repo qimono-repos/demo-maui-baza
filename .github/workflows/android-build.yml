@@ -30,7 +30,7 @@ jobs:
           DOTNET_DOWNLOAD_URL: https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.200/dotnet-sdk-9.0.200-linux-x64.tar.gz
         run: |
           echo "check if DOTNET is already installed"
-          echo dotnet --version
+          dotnet --version
           echo "Downloading .NET SDK $DOTNET_VERSION from $DOTNET_DOWNLOAD_URL"
           mkdir -p $DOTNET_INSTALL_DIR
           curl -sSL $DOTNET_DOWNLOAD_URL -o dotnet-sdk.tar.gz
@@ -42,7 +42,7 @@ jobs:
           echo $PATH 
 
           echo "Verifying .NET SDK installation"
-          echo $(eval dotnet --list-sdks)
+          dotnet --list-sdks
 
       - name: Install MAUI workload
         run: dotnet workload install maui
