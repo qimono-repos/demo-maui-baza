@@ -26,7 +26,7 @@ jobs:
       - name: Download .NET SDK (Direct) and Extract
         env:
           DOTNET_VERSION: 9.0.200
-          DOTNET_INSTALL_DIR: $HOME/dotnet  
+          DOTNET_INSTALL_DIR: $HOME/dotnet  # Use $HOME/dotnet as in the documentation
           DOTNET_DOWNLOAD_URL: https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.200/dotnet-sdk-9.0.200-linux-x64.tar.gz
         run: |
           echo "Downloading .NET SDK $DOTNET_VERSION from $DOTNET_DOWNLOAD_URL"
@@ -36,7 +36,7 @@ jobs:
 
           echo "Setting Environment Variables"
           echo "DOTNET_ROOT=$DOTNET_INSTALL_DIR" >> $GITHUB_ENV
-          echo "$DOTNET_INSTALL_DIR" >> $GITHUB_PATH
+          echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV  # Prepend to PATH
 
           echo "Verifying .NET SDK installation"
           dotnet --info
