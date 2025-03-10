@@ -36,10 +36,11 @@ jobs:
 
           echo "Setting Environment Variables"
           echo "DOTNET_ROOT=$DOTNET_INSTALL_DIR" >> $GITHUB_ENV
-          echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV  # Prepend to PATH
+          echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV
+          echo $PATH 
 
           echo "Verifying .NET SDK installation"
-          dotnet --info
+          dotnet --list-sdks
 
       - name: Install MAUI workload
         run: dotnet workload install maui
