@@ -23,15 +23,15 @@ jobs:
             zlib1g \
             libssl-dev
 
-      - name: Remove Existing .NET SDK 
+      - name: Remove Existing .NET SDK (DANGEROUS!)
         run: |
-          sudo rm -rf /usr/lib/dotnet/sdk/*  
+          sudo rm -rf /usr/lib/dotnet/sdk/*  # THIS IS POTENTIALLY DESTRUCTIVE!
           sudo rm -rf /usr/lib/dotnet/shared/*
 
       - name: Download .NET SDK (Direct) and Extract to System
         env:
           DOTNET_VERSION: 9.0.200
-          DOTNET_INSTALL_DIR: /usr/lib/dotnet 
+          DOTNET_INSTALL_DIR: /usr/lib/dotnet  # Install to system directory
           DOTNET_DOWNLOAD_URL: https://builds.dotnet.microsoft.com/dotnet/Sdk/9.0.200/dotnet-sdk-9.0.200-linux-x64.tar.gz
         run: |
           echo "Downloading .NET SDK $DOTNET_VERSION from $DOTNET_DOWNLOAD_URL"
@@ -44,16 +44,16 @@ jobs:
           echo "PATH=$DOTNET_INSTALL_DIR:$PATH" >> $GITHUB_ENV  # Prepend to PATH
 
           echo "Verifying .NET SDK installation"
-          dotnet --info
+          sudo dotnet --info
 
       - name: Install MAUI workload
-        run: dotnet workload install maui
+        run: sudo dotnet workload install maui
 
       - name: Verify MAUI workload Installation
-        run: dotnet workload list
+        run: sudo dotnet workload list
 
       - name: Restore NuGet packages
-        run: dotnet restore Demo.csproj
+        run: sudo dotnet restore Demo.csproj
 
       - name: Decode and store keystore file
         run: |
@@ -61,7 +61,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Build Android Release
-        run: dotnet publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=$GITHUB_WORKSPACE/qi-release-key.keystore /p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEY_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.ANDROID_STORE_PASSWORD }} /p:EnableTrimmer=false
+        run: sudo dotnet publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=$GITHUB_WORKSPACE/qi-release-key.keystore /p:AndroidSigningKeyAlias=${{ secrets.ANDROID_KEY_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.ANDROID_KEY_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.ANDROID_STORE_PASSWORD }} /p:EnableTrimmer=false
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
