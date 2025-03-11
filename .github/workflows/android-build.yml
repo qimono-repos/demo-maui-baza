@@ -34,7 +34,7 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Build Android Release
-        run: dotnet publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=$env:GITHUB_WORKSPACE/qi-release-key.keystore /p:AndroidSigningKeyAlias="${{ secrets.ANDROID_KEYSTORE_ALIAS }}" /p:AndroidSigningKeyPass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" /p:EnableTrimmer=false
+        run: dotnet -f net9.0-android publish Demo.csproj -c Release /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=$env:GITHUB_WORKSPACE/qi-release-key.keystore /p:AndroidSigningKeyAlias="${{ secrets.ANDROID_KEYSTORE_ALIAS }}" /p:AndroidSigningKeyPass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" /p:AndroidSigningStorePass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" /p:EnableTrimmer=false
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
