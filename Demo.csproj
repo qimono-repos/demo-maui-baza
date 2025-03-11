@@ -33,13 +33,6 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <AndroidLinkMode>None</AndroidLinkMode>
   </PropertyGroup>
-  <PropertyGroup>
-    <AndroidKeyStore>true</AndroidKeyStore>
-    <AndroidSigningKeyStore>/root/.secrets/qimono-key.keystore</AndroidSigningKeyStore>
-    <AndroidSigningKeyAlias>qimono-key</AndroidSigningKeyAlias>
-    <AndroidSigningKeyPass>$(PASSWORD_KEYSTORE)</AndroidSigningKeyPass>
-    <AndroidSigningStorePass>$(PASSWORD_KEYSTORE)</AndroidSigningStorePass>
-  </PropertyGroup>
   <PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
     <AndroidUseAapt2>true</AndroidUseAapt2>
     <AndroidEnableProfiledAot>false</AndroidEnableProfiledAot>
@@ -54,9 +47,14 @@
   <PropertyGroup>
     <AndroidLinkTool>r8</AndroidLinkTool>
     <IlLinkMode>none</IlLinkMode>
-    </PropertyGroup>
-
-
+  </PropertyGroup>
+  <!-- <PropertyGroup> -->
+    <!-- <AndroidKeyStore>true</AndroidKeyStore> -->
+    <!-- <AndroidSigningKeyStore>/root/.secrets/qimono-key.keystore</AndroidSigningKeyStore> -->
+    <!-- <AndroidSigningKeyAlias>qimono-key</AndroidSigningKeyAlias> -->
+    <!-- <AndroidSigningKeyPass>$(PASSWORD_KEYSTORE)</AndroidSigningKeyPass> -->
+    <!-- <AndroidSigningStorePass>$(PASSWORD_KEYSTORE)</AndroidSigningStorePass> -->
+  <!-- </PropertyGroup> -->
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
