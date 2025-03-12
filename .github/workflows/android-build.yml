@@ -30,7 +30,7 @@ jobs:
         run: |
           $keystoreBytes = [System.Convert]::FromBase64String("${{ secrets.ANDROID_KEYSTORE_BASE64 }}")
           Set-Content -Path "qimono-key.keystore" -Value $keystoreBytes -AsByteStream
-          keytool -list -v -keystore qimono-release-key.keystore -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" -alias "${{ secrets.ANDROID_KEYSTORE_ALIAS }}"
+          keytool -list -v -keystore qimono-key.keystore -storepass "${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" -alias "${{ secrets.ANDROID_KEYSTORE_ALIAS }}"
         working-directory: ${{ github.workspace }}
 
       - name: Build Android Release
