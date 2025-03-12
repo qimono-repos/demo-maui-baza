@@ -6,7 +6,7 @@ on:
 
 jobs:
   build-android:
-    runs-on: windows-latest 
+    runs-on: windows-latest
 
     steps:
       - name: Checkout code
@@ -15,7 +15,7 @@ jobs:
       - name: Install .NET SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x  
+          dotnet-version: 9.0.x
 
       - name: Install MAUI workload
         run: dotnet workload install maui
@@ -34,15 +34,23 @@ jobs:
         working-directory: ${{ github.workspace }}
 
       - name: Build Android Release
-        run: 
+        run: |
           dotnet publish Demo.csproj -c Release -f net9.0-android `
-                /p:AndroidKeyStore=true `
-                /p:AndroidSigningKeyStore="$env:GITHUB_WORKSPACE/qimono-key.keystore" `
-                /p:AndroidSigningKeyAlias="${{ secrets.ANDROID_KEYSTORE_ALIAS }}" `
-                /p:AndroidSigningKeyPass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" `
-                /p:AndroidSigningStorePass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" `
-                /p:AndroidSigningSigAlg=SHA256withECDSA `
-                /p:EnableTrimmer=false
+            /p:AndroidKeyStore=true `
+            /p:AndroidSigningKeyStore="$env:GITHUB_WORKSPACE\qimono-key.keystore" `
+            /p:AndroidSigningKeyAlias="${{ secrets.ANDROID_KEYSTORE_ALIAS }}" `
+            /p:AndroidSigningKeyPass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" `
+            /p:AndroidSigningStorePass="${{ secrets.ANDROID_KEYSTORE_PASSWORD }}" `
+            /p:AndroidSigningSigAlg=SHA256withECDSA `
+            /p:AndroidApkSignerAdditionalArgs="--min-sdk-version 21" `
+            /p:EnableTrimmer=false
+
+      - name: Verify APK Exists
+        run: |
+          Get-ChildItem -Recurse -Filter *.apk
+          if (-not (Test-Path "Demo\bin\Release\net9.0-android\publish\*.apk")) {
+            throw "APK not found!"
+          }
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
