@@ -53,8 +53,8 @@
     <!-- <AndroidKeyStore>true</AndroidKeyStore> -->
     <!-- <AndroidSigningKeyStore>/root/.secrets/qimono-key.keystore</AndroidSigningKeyStore> -->
     <!-- <AndroidSigningKeyAlias>qimono-key</AndroidSigningKeyAlias> -->
-    <!-- <AndroidSigningKeyPass>$(PASSWORD_KEYSTORE)</AndroidSigningKeyPass> -->
-    <!-- <AndroidSigningStorePass>$(PASSWORD_KEYSTORE)</AndroidSigningStorePass> -->
+    <!-- <AndroidSigningKeyPass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningKeyPass> -->
+    <!-- <AndroidSigningStorePass>$(ANDROID_KEYSTORE_PASSWORD)</AndroidSigningStorePass> -->
   <!-- </PropertyGroup> -->
 	<ItemGroup>
 		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
