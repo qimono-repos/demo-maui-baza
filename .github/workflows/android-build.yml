@@ -46,13 +46,14 @@ jobs:
 
       - name: Verify APK Exists
         run: |
-          Get-ChildItem -Recurse -Filter *.apk
-          if (-not (Test-Path "Demo\bin\Release\net9.0-android\publish\*.apk")) {
+          $apkFiles = Get-ChildItem -Path "bin\Release\net9.0-android" -Recurse -Filter *.apk
+          if ($apkFiles.Count -eq 0) {
             throw "APK not found!"
           }
+          Write-Host "Found APK: $($apkFiles.FullName)"
 
       - name: Upload Signed APK
         uses: actions/upload-artifact@v4
         with:
           name: Signed-Android-APK
-          path: Demo/bin/Release/net9.0-android/publish/*.apk
+          path: bin/Release/net9.0-android/**/*.apk 
